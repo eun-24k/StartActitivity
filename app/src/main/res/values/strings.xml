@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">StartActivity</string>
+    <string name="at">\u0040</string>
+    <string name="empty_name_message">"이름을 입력하세요."</string>
+    <string name="empty_email_message">"이메일을 입력하세요."</string>
+    <string name="empty_email_provider_message">"이메일 주소를 입력하세요."</string>
+    <string name="empty_password_message">"비밀번호를 입력하세요."</string>
+    <string name="empty_id_message">"아이디를 입력하세요."</string>
+    <string name="incorrect_login_info">"아이디/비밀번호가 옳지 않습니다.."</string>
+
+    <string name="name_error_message">"올바른 이름 형식을 입력하세요"</string>
+    <string name="id_error_message">"올바른 아이디 형식을 입력하세요"</string>
+    <string name="email_error_message">"올바른 이메일 형식을 입력하세요"</string>
+    <string name="password_error_message">"비밀번호는 영대소문자/숫자/특수문자 포함해야 하고 최소 8글자여야합니다."</string>
+    <string name="password_check_error_message">"비밀번호가 일치하지 않습니다."</string>
+    <string name="email2_error_message">"올바른 형식의 이메일을 선택하세요."</string>
+
+    <string name="sign_up_email_provider_gmail">"gmail.com"</string>
+    <string name="sign_up_email_provider_kakao">"kakao.com"</string>
+    <string name="sign_up_email_provider_naver">"naver.com"</string>
+    <string name="sign_up_email_provider_direct">"직접입력"</string>
+
+</resources>
