@@ -4,31 +4,54 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
+import com.example.startactitivity.signup.SignUpActivity
+import com.example.startactitivity.signup.SignUpErrorMessage
 
-class SignInActivity : AppCompatActivity() {
-    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+class SignInActivity : AppCompatActivity(), EditTextValidation {
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-    private val et_id: EditText by lazy {
+    // edit Text
+    private val etId: EditText by lazy {
         findViewById(R.id.et_id)
     }
-    private val et_pw: EditText by lazy {
+    private val etPw: EditText by lazy {
         findViewById(R.id.et_password)
     }
-    private val btn_login: Button by lazy {
+
+    // button
+    private val btnLogin: Button by lazy {
         findViewById(R.id.btn_login)
     }
-    private val btn_signUp: Button by lazy {
+    private val btnSignup: Button by lazy {
         findViewById(R.id.btn_signup)
     }
-//    private val
-//    private val editTextArray : Array<EditText> by lazy {
-//        arrayOf(et_id, et_pw)
-//    }
+
+    // em : Error Message
+    private val emId: TextView by lazy {
+        findViewById(R.id.type_id)
+    }
+    private val emPw: TextView by lazy {
+        findViewById(R.id.type_pw)
+    }
+
+    // Array
+    private val editTextArray: Array<EditText> by lazy {
+        arrayOf(etId, etPw)
+    }
+    private val errorMessageArray: Array<TextView> by lazy {
+        arrayOf(emId, emPw)
+    }
+    private val EmptyEditTextErrorMessage: Array<String> by lazy {
+        arrayOf(
+            getString(R.string.empty_id_message),
+            getString(R.string.empty_password_message),
+        )
+    }
 
 
 
@@ -41,42 +64,64 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        resultLaunchActivity()
-        setButton()
+        activityResultLauncher()
+        btnSignUp()
+        btnLogIn()
 
 
     }
 
-    fun resultLaunchActivity() {
+    private fun activityResultLauncher() {
         activityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
-                    val user_id = it.data?.getStringExtra("id") ?: ""
-                    val user_pw = it.data?.getStringExtra("pw") ?: ""
-                    et_id.setText(user_id)
-                    et_pw.setText(user_pw)
+                    val userId = it.data?.getStringExtra("id") ?: ""
+                    val userPw = it.data?.getStringExtra("pw") ?: ""
+                    etId.setText(userId)
+                    etPw.setText(userPw)
                 }
             }
     }
 
+    private fun btnLogIn() {
+        btnLogin.setOnClickListener {
+            when {
+                etId.text.toString().trim().isEmpty() -> {
+                    Toast.makeText(this, SignUpErrorMessage.EMPTY_ID.message, Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
 
-
-    fun setButton() {
-        btn_login.setOnClickListener {
-            if (et_id.text.toString().trim().isEmpty() || et_pw.text.toString().trim().isEmpty()) {
-                Toast.makeText(this, getString(R.string.id_error_message), Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
+                etPw.text.toString().trim().isEmpty() -> {
+                    Toast.makeText(
+                        this,
+                        SignUpErrorMessage.EMPTY_PASSWORD.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
             }
 
             val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("id", et_id.text.toString())
+            intent.putExtra("id", etId.text.toString())
+
             startActivity(intent)
+
+
         }
-        btn_signUp.setOnClickListener {
+
+    }
+
+    private fun btnSignUp() {
+        btnSignup.setOnClickListener {
 
             val intent = Intent(this, SignUpActivity::class.java)
             activityResultLauncher.launch(intent)
         }
+
     }
+
+
 }
+
+

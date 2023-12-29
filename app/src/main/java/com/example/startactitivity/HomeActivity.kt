@@ -1,11 +1,13 @@
 package com.example.startactitivity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import com.example.startactitivity.signup.SignUpActivity
 
 class HomeActivity : AppCompatActivity() {
     private val tvId: TextView by lazy {
@@ -13,6 +15,9 @@ class HomeActivity : AppCompatActivity() {
     }
     private val btnFinish: Button by lazy {
         findViewById(R.id.btn_finish)
+    }
+    private val btnEdit: Button by lazy {
+        findViewById(R.id.btn_edit_user_info)
     }
     private val ivLogo: ImageView by lazy {
         findViewById(R.id.iv_me)
@@ -44,6 +49,12 @@ class HomeActivity : AppCompatActivity() {
 
         ivLogo.setImageDrawable(ResourcesCompat.getDrawable(resources, selectedImage, null))
 
+        btnEdit.setOnClickListener {
+            intent = Intent(this, SignUpActivity::class.java)
+            intent.putExtra("edit", 0)
+
+            startActivity(intent)
+        }
 
 
     }
