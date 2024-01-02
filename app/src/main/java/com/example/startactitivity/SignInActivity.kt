@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.startactitivity.UserDatabase.getUser
 import com.example.startactitivity.signup.SignUpActivity
 import com.example.startactitivity.signup.SignUpErrorMessage
 
@@ -85,6 +86,7 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
 
     private fun btnLogIn() {
         btnLogin.setOnClickListener {
+            val userInfo = getUser(etId.text.toString())
             when {
                 etId.text.toString().trim().isEmpty() -> {
                     Toast.makeText(this, SignUpErrorMessage.EMPTY_ID.message, Toast.LENGTH_SHORT)
@@ -96,6 +98,22 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
                     Toast.makeText(
                         this,
                         SignUpErrorMessage.EMPTY_PASSWORD.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                (userInfo == null) -> {
+                    Toast.makeText(
+                        this,
+                        SignUpErrorMessage.INVALID_ID.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                (userInfo.password != etPw.text.toString()) -> {
+                    Toast.makeText(
+                        this,
+                        SignUpErrorMessage.PASSWORD_MISMATCH.message,
                         Toast.LENGTH_SHORT
                     ).show()
                     return@setOnClickListener

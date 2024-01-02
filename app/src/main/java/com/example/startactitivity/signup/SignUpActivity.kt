@@ -8,8 +8,11 @@ import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
+import com.example.startactitivity.HomeActivity
 import com.example.startactitivity.R
 import com.example.startactitivity.SignInActivity
+import com.example.startactitivity.User
+import com.example.startactitivity.UserDatabase
 import com.example.startactitivity.signup.SignUpValidExtension.includeAlphabetAndNumber
 import com.example.startactitivity.signup.SignUpValidExtension.includeKorean
 import com.example.startactitivity.signup.SignUpValidExtension.includeSpecialCharacters
@@ -19,6 +22,8 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
 
+
+    private var accessPath: Int = 0
 
     private val etName: EditText by lazy {
         findViewById(R.id.et_name)
@@ -46,6 +51,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun initView() {
         if ( intent.hasExtra("edit")) {
             btnSignup.text = "회원 수정"
+            accessPath = 1
         }
         setTextChangedListener()
         setOnFocusChangedListener()
@@ -66,12 +72,38 @@ class SignUpActivity : AppCompatActivity() {
 
 
         btnSignup.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java).apply {
-                putExtra("id", etId.text.toString())
-                putExtra("password", etPw.text.toString())
+
+
+            when (accessPath) {
+                0 -> {
+
+                    UserDatabase.addUser(
+                        User(etName.text.toString(), etId.text.toString(), etPw.text.toString())
+                    )
+
+                    val intent = Intent(this, SignInActivity::class.java).apply {
+                        putExtra("id", etId.text.toString())
+                        putExtra("password", etPw.text.toString())
+                    }
+                    setResult(RESULT_OK, intent)
+                    resultLauncher.launch(intent)
+                }
+                1 -> {
+
+                    UserDatabase.editUserData(
+                        User(etName.text.toString(), etId.text.toString(), etPw.text.toString())
+                    )
+
+                    val intent = Intent(this, HomeActivity::class.java).apply {
+                        putExtra("id", etId.text.toString())
+                        putExtra("password", etPw.text.toString())
+                    }
+                    setResult(RESULT_OK, intent)
+                    resultLauncher.launch(intent)
+                }
             }
-            setResult(RESULT_OK, intent)
-            resultLauncher.launch(intent)
+
+
         }
     }
 
