@@ -10,42 +10,23 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.startactitivity.UserDatabase.getUser
+import com.example.startactitivity.databinding.ActivitySigninBinding
 import com.example.startactitivity.signup.SignUpActivity
 import com.example.startactitivity.signup.SignUpErrorMessage
 
 class SignInActivity : AppCompatActivity(), EditTextValidation {
+
+    private lateinit var binding: ActivitySigninBinding
+
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-    // edit Text
-    private val etId: EditText by lazy {
-        findViewById(R.id.et_id)
-    }
-    private val etPw: EditText by lazy {
-        findViewById(R.id.et_password)
-    }
-
-    // button
-    private val btnLogin: Button by lazy {
-        findViewById(R.id.btn_login)
-    }
-    private val btnSignup: Button by lazy {
-        findViewById(R.id.btn_signup)
-    }
-
-    // em : Error Message
-    private val emId: TextView by lazy {
-        findViewById(R.id.type_id)
-    }
-    private val emPw: TextView by lazy {
-        findViewById(R.id.type_pw)
-    }
 
     // Array
     private val editTextArray: Array<EditText> by lazy {
-        arrayOf(etId, etPw)
+        arrayOf(binding.etId, binding.etPw)
     }
     private val errorMessageArray: Array<TextView> by lazy {
-        arrayOf(emId, emPw)
+        arrayOf(binding.emId, binding.emPw)
     }
     private val EmptyEditTextErrorMessage: Array<String> by lazy {
         arrayOf(
@@ -58,7 +39,9 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signin)
+        binding = ActivitySigninBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         initView()
 
@@ -78,23 +61,23 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
                 if (it.resultCode == RESULT_OK) {
                     val userId = it.data?.getStringExtra("id") ?: ""
                     val userPw = it.data?.getStringExtra("pw") ?: ""
-                    etId.setText(userId)
-                    etPw.setText(userPw)
+                    binding.etId.setText(userId)
+                    binding.etPw.setText(userPw)
                 }
             }
     }
 
     private fun btnLogIn() {
-        btnLogin.setOnClickListener {
-            val userInfo = getUser(etId.text.toString())
+        binding.btnLogin.setOnClickListener {
+            val userInfo = getUser(binding.etId.text.toString())
             when {
-                etId.text.toString().trim().isEmpty() -> {
+                binding.etId.text.toString().trim().isEmpty() -> {
                     Toast.makeText(this, SignUpErrorMessage.EMPTY_ID.message, Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }
 
-                etPw.text.toString().trim().isEmpty() -> {
+                binding.etPw.text.toString().trim().isEmpty() -> {
                     Toast.makeText(
                         this,
                         SignUpErrorMessage.EMPTY_PASSWORD.message,
@@ -110,7 +93,7 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
                     ).show()
                     return@setOnClickListener
                 }
-                (userInfo.password != etPw.text.toString()) -> {
+                (userInfo.password != binding.etPw.text.toString()) -> {
                     Toast.makeText(
                         this,
                         SignUpErrorMessage.PASSWORD_MISMATCH.message,
@@ -121,7 +104,7 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
             }
 
             val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("id", etId.text.toString())
+            intent.putExtra("id", binding.etId.text.toString())
 
             startActivity(intent)
 
@@ -131,7 +114,7 @@ class SignInActivity : AppCompatActivity(), EditTextValidation {
     }
 
     private fun btnSignUp() {
-        btnSignup.setOnClickListener {
+        binding.btnSignup.setOnClickListener {
 
             val intent = Intent(this, SignUpActivity::class.java)
             activityResultLauncher.launch(intent)

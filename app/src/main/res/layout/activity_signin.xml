@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_sparta" />
 
     <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/etId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
@@ -42,13 +42,13 @@
         android:layout_marginEnd="40dp"/>
 
     <TextView
-        android:id="@+id/type_id"
+        android:id="@+id/emId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/empty_id_message"
         android:textColor="@color/red"
-        app:layout_constraintStart_toStartOf="@+id/et_id"
-        app:layout_constraintTop_toBottomOf="@+id/et_id"
+        app:layout_constraintStart_toStartOf="@+id/etId"
+        app:layout_constraintTop_toBottomOf="@+id/etId"
         android:visibility="invisible"/>
 
     <TextView
@@ -58,11 +58,11 @@
         android:text="비밀번호"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/type_id"
-        app:layout_constraintTop_toBottomOf="@+id/type_id" />
+        app:layout_constraintStart_toStartOf="@+id/emId"
+        app:layout_constraintTop_toBottomOf="@+id/emId" />
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/etPw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
@@ -73,15 +73,15 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_password" />
 
     <TextView
-        android:id="@+id/type_password"
+        android:id="@+id/emPw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password_error_message"
         android:textColor="@color/red"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        app:layout_constraintStart_toStartOf="@+id/et_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        app:layout_constraintStart_toStartOf="@+id/etPw"
+        app:layout_constraintTop_toBottomOf="@+id/etPw"
         android:visibility="invisible"/>
 
     <Button
@@ -96,7 +96,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        app:layout_constraintTop_toBottomOf="@+id/type_password" />
+        app:layout_constraintTop_toBottomOf="@+id/emPw" />
 
     <Button
         android:id="@+id/btn_signup"

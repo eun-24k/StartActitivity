@@ -13,6 +13,7 @@ import com.example.startactitivity.R
 import com.example.startactitivity.SignInActivity
 import com.example.startactitivity.User
 import com.example.startactitivity.UserDatabase
+import com.example.startactitivity.databinding.ActivitySignupBinding
 import com.example.startactitivity.signup.SignUpValidExtension.includeAlphabetAndNumber
 import com.example.startactitivity.signup.SignUpValidExtension.includeKorean
 import com.example.startactitivity.signup.SignUpValidExtension.includeSpecialCharacters
@@ -21,36 +22,25 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
-
+    private lateinit var binding: ActivitySignupBinding
 
     private var accessPath: Int = 0
 
-    private val etName: EditText by lazy {
-        findViewById(R.id.et_name)
+    val editTextArray by lazy {
+        arrayOf(binding.etName, binding.etId, binding.etPw)
     }
-    private val etId: EditText by lazy {
-        findViewById(R.id.et_id)
-    }
-    private val etPw: EditText by lazy {
-        findViewById(R.id.et_pw)
-    }
-    private val btnSignup: Button by lazy {
-        findViewById(R.id.btn_signup)
-    }
-    private val editTextArray: Array<EditText> by lazy {
-        arrayOf(etName, etId, etPw)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        binding = ActivitySignupBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         initView()
     }
 
     private fun initView() {
         if ( intent.hasExtra("edit")) {
-            btnSignup.text = "회원 수정"
+            binding.btnSignup.text = "회원 수정"
             accessPath = 1
         }
         setTextChangedListener()
@@ -63,27 +53,27 @@ class SignUpActivity : AppCompatActivity() {
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    intent.putExtra("id", etId.text.toString())
-                    intent.putExtra("password", etPw.text.toString())
+                    intent.putExtra("id", binding.etId.text.toString())
+                    intent.putExtra("password", binding.etPw.text.toString())
                     setResult(RESULT_OK, intent)
                     finish()
                 }
             }
 
 
-        btnSignup.setOnClickListener {
+        binding.btnSignup.setOnClickListener {
 
 
             when (accessPath) {
                 0 -> {
 
                     UserDatabase.addUser(
-                        User(etName.text.toString(), etId.text.toString(), etPw.text.toString())
+                        User(binding.etName.text.toString(), binding.etId.text.toString(), binding.etPw.text.toString())
                     )
 
                     val intent = Intent(this, SignInActivity::class.java).apply {
-                        putExtra("id", etId.text.toString())
-                        putExtra("password", etPw.text.toString())
+                        putExtra("id", binding.etId.text.toString())
+                        putExtra("password", binding.etPw.text.toString())
                     }
                     setResult(RESULT_OK, intent)
                     resultLauncher.launch(intent)
@@ -91,12 +81,12 @@ class SignUpActivity : AppCompatActivity() {
                 1 -> {
 
                     UserDatabase.editUserData(
-                        User(etName.text.toString(), etId.text.toString(), etPw.text.toString())
+                        User(binding.etName.text.toString(), binding.etId.text.toString(), binding.etPw.text.toString())
                     )
 
                     val intent = Intent(this, HomeActivity::class.java).apply {
-                        putExtra("id", etId.text.toString())
-                        putExtra("password", etPw.text.toString())
+                        putExtra("id", binding.etId.text.toString())
+                        putExtra("password", binding.etPw.text.toString())
                     }
                     setResult(RESULT_OK, intent)
                     resultLauncher.launch(intent)
@@ -129,16 +119,16 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun EditText.setErrorMessage() {
         when (this) {
-            etName -> error = getMessageValidName()
-            etId -> error = getMessageValidId()
-            etPw -> error = getMessageValidPassword()
+            binding.etName -> error = getMessageValidName()
+            binding.etId -> error = getMessageValidId()
+            binding.etPw -> error = getMessageValidPassword()
 
             else -> Unit
         }
     }
 
     private fun getMessageValidName(): String? {
-        val text = etName.text.toString()
+        val text = binding.etName.text.toString()
         val errorCode = when {
             text.isBlank() -> SignUpErrorMessage.EMPTY_NAME
             text.includeKorean() -> null
@@ -150,7 +140,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     fun getMessageValidId(): String? {
-        val text = etId.text.toString()
+        val text = binding.etId.text.toString()
         val errorCode = when {
             text.isBlank() -> SignUpErrorMessage.EMPTY_ID
             text.includeAlphabetAndNumber() -> null
@@ -162,7 +152,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     fun getMessageValidPassword(): String? {
-        val text = etPw.text.toString()
+        val text = binding.etPw.text.toString()
         val errorCode = when {
             text.isBlank() -> SignUpErrorMessage.EMPTY_PASSWORD
             text.includeSpecialCharacters() -> null
@@ -174,7 +164,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     fun setConfirmButtonEnable() {
-        btnSignup.isEnabled = getMessageValidName() == null
+        binding.btnSignup.isEnabled = getMessageValidName() == null
                 && getMessageValidId() == null
                 && getMessageValidPassword() == null
     }

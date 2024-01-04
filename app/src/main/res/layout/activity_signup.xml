@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/type_name" />
 
     <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/etId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
@@ -63,13 +63,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_id" />
 
     <TextView
-        android:id="@+id/type_id"
+        android:id="@+id/emId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/id_error_message"
         android:textColor="@color/red"
-        app:layout_constraintStart_toStartOf="@+id/et_id"
-        app:layout_constraintTop_toBottomOf="@+id/et_id"
+        app:layout_constraintStart_toStartOf="@+id/etId"
+        app:layout_constraintTop_toBottomOf="@+id/etId"
         android:visibility="invisible"/>
 
     <TextView
@@ -80,8 +80,8 @@
         android:textStyle="bold"
         android:text="비밀번호"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/type_id"
-        app:layout_constraintTop_toBottomOf="@+id/type_id" />
+        app:layout_constraintStart_toStartOf="@+id/emId"
+        app:layout_constraintTop_toBottomOf="@+id/emId" />
 
     <EditText
         android:id="@+id/et_pw"

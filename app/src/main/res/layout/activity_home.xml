@@ -2,7 +2,6 @@
 <LinearLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_marginTop="50dp"
     android:layout_marginLeft="40dp"
@@ -10,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
-        android:id="@+id/iv_me"
+        android:id="@+id/iv_logo"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
         app:srcCompat="@drawable/me" />
@@ -54,7 +53,7 @@
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/btn_edit_user_info"
+        android:id="@+id/btn_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
