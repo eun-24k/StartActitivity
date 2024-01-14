@@ -36,4 +36,6 @@
     <string name="signin_activity_signin">회원가입</string>
     <string name="choose_profile_img">프로필을 골라주세요!!</string>
     <string name="post_empty_comment">댓글을 작성하세요.</string>
+
+    <string name="v"></string>
 </resources>
