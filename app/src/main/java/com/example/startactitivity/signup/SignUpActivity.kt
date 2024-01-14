@@ -3,10 +3,8 @@ package com.example.startactitivity.signup
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.startactitivity.HomeActivity
 import com.example.startactitivity.SignInActivity
@@ -22,9 +20,9 @@ class SignUpActivity : AppCompatActivity() {
 
     private var accessPath: Int = 0
 
-    private var checkName : String? = ""
-    private var checkId : String? = ""
-    private var checkPassword : String? = ""
+    private var checkName: String? = ""
+    private var checkId: String? = ""
+    private var checkPassword: String? = ""
 
     val editTextArray by lazy {
         arrayOf(binding.etName, binding.etId, binding.etPw)
@@ -33,6 +31,7 @@ class SignUpActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this@SignUpActivity)[SignUpViewModel::class.java]
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
@@ -44,7 +43,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        if ( intent.hasExtra("edit")) {
+        if (intent.hasExtra("edit")) {
             binding.btnSignup.text = "회원 수정"
             accessPath = 1
         }
@@ -55,28 +54,13 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initViewModel() = with(viewModel) {
         nameErrorMessage.observe(this@SignUpActivity) {
-//            getNullIfValid(binding.etName, getString(it.message))
             getNullIfValid("name", getString(it.message))
-//            binding.etName.error = when {
-//                getString(it.message).isEmpty() -> null
-//                else -> getString(it.message)
-//            }
         }
         idErrorMessage.observe(this@SignUpActivity) {
-//            getNullIfValid(binding.etId, getString(it.message))
-            getNullIfValid("id",getString(it.message))
-//            binding.etId.error = when {
-//                getString(it.message).isEmpty() -> null
-//                else -> getString(it.message)
-//            }
+            getNullIfValid("id", getString(it.message))
         }
         passwordErrorMessage.observe(this@SignUpActivity) {
-//            getNullIfValid(binding.etPw, getString(it.message))
             getNullIfValid("password", getString(it.message))
-//            binding.etPw.error = when {
-//                getString(it.message).isEmpty() -> null
-//                else -> getString(it.message)
-//            }
         }
 
         checkName.observe(this@SignUpActivity) {
@@ -95,6 +79,15 @@ class SignUpActivity : AppCompatActivity() {
         enableConfrimButton.observe(this@SignUpActivity) {
             binding.btnSignup.isEnabled = it
         }
+        editTextOnFocus.observe(this@SignUpActivity) {
+            setErrorMessage(it)
+            setConfirmButtonEnable()
+        }
+        editTextTextChange.observe(this@SignUpActivity) {
+            setErrorMessage(it)
+            setConfirmButtonEnable()
+        }
+
     }
 
 
@@ -117,7 +110,11 @@ class SignUpActivity : AppCompatActivity() {
                 0 -> {
 
                     UserDatabase.addUser(
-                        User(binding.etName.text.toString(), binding.etId.text.toString(), binding.etPw.text.toString())
+                        User(
+                            binding.etName.text.toString(),
+                            binding.etId.text.toString(),
+                            binding.etPw.text.toString()
+                        )
                     )
 
                     val intent = Intent(this, SignInActivity::class.java).apply {
@@ -127,10 +124,15 @@ class SignUpActivity : AppCompatActivity() {
                     setResult(RESULT_OK, intent)
                     resultLauncher.launch(intent)
                 }
+
                 1 -> {
 
                     UserDatabase.editUserData(
-                        User(binding.etName.text.toString(), binding.etId.text.toString(), binding.etPw.text.toString())
+                        User(
+                            binding.etName.text.toString(),
+                            binding.etId.text.toString(),
+                            binding.etPw.text.toString()
+                        )
                     )
 
                     val intent = Intent(this, HomeActivity::class.java).apply {
@@ -147,89 +149,39 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setTextChangedListener() {
-        editTextArray.forEach { editText ->
-            editText.addTextChangedListener {
-                editText.setErrorMessage()
-                setConfirmButtonEnable()
-            }
-        }
+        viewModel.setTextChangedListener(editTextArray)
     }
 
     private fun setOnFocusChangedListener() {
-        editTextArray.forEach { editText ->
-            editText.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    editText.setErrorMessage()
-                    setConfirmButtonEnable()
-                }
-            }
-        }
-    }
+        viewModel.setOnFocusChangedListener(editTextArray)
 
-    private fun EditText.setErrorMessage() {
-        when (this) {
-            binding.etName -> getMessageValidName()
-            binding.etId -> getMessageValidId()
-            binding.etPw -> getMessageValidPassword()
-
-            else -> Unit
-        }
     }
 
     private fun getMessageValidName() {
         viewModel.setMessageValidName(binding.etName.text.toString())
-//        val text = binding.etName.text.toString()
-//        val errorCode = when {
-//            text.isBlank() -> SignUpErrorMessage.EMPTY_NAME
-//            text.includeKorean() -> null
-//            else -> SignUpErrorMessage.INVIALID_NAME
-//        }
-//        return errorCode?.let {
-//            getString(it.message)
-//        }
     }
 
-    private fun getMessageValidId(){
+    private fun getMessageValidId() {
         viewModel.setMessageValidId(binding.etId.text.toString())
-
-//        val text = binding.etId.text.toString()
-//        val errorCode = when {
-//            text.isBlank() -> SignUpErrorMessage.EMPTY_ID
-//            text.includeAlphabetAndNumber() -> null
-//            else -> SignUpErrorMessage.INVALID_ID
-//        }
-//        return errorCode?.let {
-//            getString(it.message)
-//        }
     }
 
-    private fun getMessageValidPassword(){
+    private fun getMessageValidPassword() {
         viewModel.setMessageValidPassword(binding.etPw.text.toString())
-
-//        val text = binding.etPw.text.toString()
-//        val errorCode = when {
-//            text.isBlank() -> SignUpErrorMessage.EMPTY_PASSWORD
-//            text.includeSpecialCharacters() -> null
-//            else -> SignUpErrorMessage.INVALID_PASSWORD
-//        }
-//        return errorCode?.let {
-//            getString(it.message)
-//        }
     }
 
     private fun getNullIfValid(type: String, message: String) {
         viewModel.setNullIfValid(type, message)
     }
 
-//    private fun setConfirmButtonEnable() {
-//        binding.btnSignup.isEnabled = getMessageValidName() == null
-//                && getMessageValidId() == null
-//                && getMessageValidPassword() == null
-//    }
-
     private fun setConfirmButtonEnable() {
         viewModel.enableConfirmButton(checkName, checkId, checkPassword)
     }
 
+    private fun setErrorMessage(type: String?) {
+        when (type) {
+            "name" -> getMessageValidName()
+            "id" -> getMessageValidId()
+            "password" -> getMessageValidPassword()
+        }
+    }
 }
-
